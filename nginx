@@ -1,0 +1,73 @@
+####
+lua_package_path '/opt/portier/nginx/?.lua;/usr/share/lua/5.1/?.lua;;';
+init_by_lua_file /opt/portier/nginx/i.lua;
+
+limit_req_zone $binary_remote_addr zone=portier_nginx_login:10m rate=5r/m;
+
+proxy_cache_path /var/cache/nginx keys_zone=broker:64k;
+####
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	server_name _;
+
+	access_log off;
+
+	####
+	limit_req_status 429;
+
+	access_by_lua_file /opt/portier/nginx/a.lua;
+
+	location = /.portier/login {
+		limit_req zone=portier_nginx_login burst=5 nodelay;
+
+		limit_except HEAD GET {
+			deny all;
+		}
+
+		content_by_lua_file /opt/portier/nginx/l.lua;
+	}
+
+	location = /.portier/verify {
+		limit_except POST {
+			deny all;
+		}
+
+		#access_by_lua_file /opt/portier/nginx/v.lua;
+	}
+
+	location = /.portier/logout {
+		limit_except HEAD GET {
+			deny all;
+		}
+
+		add_header Set-Cookie "portier_nginx_email=; Expires=Fri, 01 Jan 2010 00:00:00 GMT";
+
+		return 307 $scheme://$http_host;
+	}
+
+	location = /.portier/broker {
+		internal;
+
+		proxy_http_version 1.0;
+		proxy_set_header User-Agent "";
+		proxy_set_header Cookie "";
+		#proxy_set_header Host "www.googleapis.com";
+		#proxy_pass https://www.googleapis.com/oauth2/v1/certs;
+
+		proxy_ssl_verify on;
+		proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+
+		proxy_cache_lock on;
+		proxy_cache_use_stale error timeout updating;
+		proxy_cache broker;
+	}
+	####
+
+	location / {
+		root /var/www/html;
+		index index.html index.htm index.nginx-debian.html;
+	}
+}
