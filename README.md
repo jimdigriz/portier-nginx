@@ -28,7 +28,7 @@ You will require:
 This is still a Work-in-Progress so unfortunately you will have to slum it with a Docker container whilst I experiment and tidy things up...sorry, it is awful.
 
     docker build -t portier-nginx .
-    docker run -it -p 1080:80 portier-nginx
+    docker run -it --rm -p 1080:80 portier-nginx
 
 Now open your browser to:
 
