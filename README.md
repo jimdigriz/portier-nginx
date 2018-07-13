@@ -34,6 +34,4 @@ In the container run:
 
     /etc/init.d/nginx start
 
-On your workstation though run:
-
-    http://localhost:1080
+On your workstation in a browser go to: http://localhost:1080
