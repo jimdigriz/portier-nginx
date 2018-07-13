@@ -16,18 +16,18 @@ if not id_token then
         ngx.log(ngx.WARN, "missing id_token")
         return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
-local header, payload, signature = id_token:match("^([^.]+)%.([^.]+)%.([^.]+)$")
-if not signature then
+local header_b64url, payload_b64url, signature_b64url = id_token:match("^([^.]+)%.([^.]+)%.([^.]+)$")
+if not signature_b64url then
 	ngx.log(ngx.WARN, "id_token invalid")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
-header = json.decode(base64url_decode(header))
+header = json.decode(base64url_decode(header_b64url))
 if header.alg ~= "RS256" then
 	ngx.log(ngx.WARN, "unsupported alg '" .. header.alg .. "'")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-payload = json.decode(base64url_decode(payload))
+payload = json.decode(base64url_decode(payload_b64url))
 if payload.iss ~= broker then
 	ngx.log(ngx.ERR, "payload iss mismatch, got '" .. payload.iss .. "', expected '" .. broker .. "'")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
@@ -45,7 +45,12 @@ end
 -- TODO check nonce matches (requires hmac in the verify postback url)
 
 -- the email to use is .sub
-ngx.log(ngx.ERR, json.encode(payload.sub))
+local email = payload.sub
+local valid = validemail.validemail(email)
+if not valid then
+	ngx.log(ngx.WARN, "email not valid: " .. email)
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
 
 local conf_res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
 if conf_res.status >= 400 or conf_res.truncated then
@@ -71,6 +76,18 @@ if not key then
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-ngx.log(ngx.ERR, json.encode(key))
-
 -- https://stackoverflow.com/a/27570866
+local top_header = ngx.decode_base64("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA")
+local mid_header = "\x02\x03"
+local n = base64url_decode(key.n)
+local e = base64url_decode(key.e)
+local pub = pkey.new(top_header .. n .. mid_header .. e, 'DER')
+local data = digest.new("sha256")
+data:update(header_b64url .. "." .. payload_b64url)
+local verified = pub:verify(base64url_decode(signature_b64url), data)
+if not verified then
+	ngx.log(ngx.WARN, "bad signature")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+
+ngx.log(ngx.ERR, email)
