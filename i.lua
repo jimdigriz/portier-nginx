@@ -12,6 +12,11 @@ function base64url_decode (s64url)
 	return ngx.decode_base64(s64)
 end
 
+function proxy_url (url)
+	local scheme, rest = url:match("^(%w+)://(.*)$")
+	return "/.portier/proxy/" .. scheme .. "/" .. rest
+end
+
 validemail = require "valid-email"
 resolver = require "nginx.dns.resolver"
 random = require "nginx.random"
@@ -20,6 +25,12 @@ json = require "json"
 x509 = require "openssl.x509"
 digest = require "openssl.digest"
 pkey = require "openssl.pkey"
+
+-- broker = os.getenv("BROKER")
+broker = "https://broker.portier.io"
+if not broker then
+	assert("missing env BROKER")
+end
 
 -- nameservers_str = os.getenv("NAMESERVERS")
 nameservers_str = "8.8.8.8 8.8.4.4"

@@ -35,7 +35,7 @@ server {
 			deny all;
 		}
 
-		#access_by_lua_file /opt/portier/nginx/v.lua;
+		access_by_lua_file /opt/portier/nginx/v.lua;
 	}
 
 	location = /.portier/logout {
@@ -48,16 +48,20 @@ server {
 		return 307 $scheme://$http_host;
 	}
 
-	location = /.portier/broker {
+	location ~ ^/.portier/proxy/(?<proxy_scheme>[^/]+)/(?<proxy_host>[^/]+)(?<proxy_url>.*)$ {
 		internal;
+
+		resolver 8.8.8.8 8.8.4.4;
 
 		proxy_http_version 1.0;
 		proxy_set_header User-Agent "";
 		proxy_set_header Cookie "";
-		#proxy_set_header Host "www.googleapis.com";
-		#proxy_pass https://www.googleapis.com/oauth2/v1/certs;
+		proxy_set_header Host "$proxy_host";
+		set $proxy_backend "$proxy_scheme://$proxy_host$proxy_url$is_args$args";
+		proxy_pass $proxy_backend;
 
 		proxy_ssl_verify on;
+		proxy_ssl_server_name on;
 		proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
 
 		proxy_cache_lock on;

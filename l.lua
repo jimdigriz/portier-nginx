@@ -55,6 +55,13 @@ function handle (email)
 		return ngx.redirect(url_login, ngx.HTTP_TEMPORARY_REDIRECT)
 	end
 
+	local res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
+	if res.status >= 400 or res.truncated then
+		ngx.log(ngx.ERR, "failed to get /.well-known/openid-configuration")
+		return ngx.exit(ngx.HTTP_BAD_GATEWAY)
+	end
+	local openid_configuration = json.decode(res.body)
+
 	local args = {
 		client_id = url,
 		nonce = str.to_hex(random.bytes(16)),
@@ -64,7 +71,7 @@ function handle (email)
 		login_hint = email,
 		response_mode = "form_post"
 	}
-	ngx.redirect("https://broker.portier.io/auth?" .. ngx.encode_args(args), ngx.HTTP_TEMPORARY_REDIRECT)
+	ngx.redirect(openid_configuration.authorization_endpoint .. "?" .. ngx.encode_args(args), ngx.HTTP_TEMPORARY_REDIRECT)
 end
 
 local args = ngx.req.get_uri_args()
@@ -73,5 +80,3 @@ if not args.email then
 else
 	handle(args.email)
 end
-
--- https://broker.portier.io/auth?client_id=https%3A%2F%2Fportier-demo.herokuapp.com&nonce=b469af29ba1549b28efecf6e06ce71e7&response_type=id_token&redirect_uri=https%3A%2F%2Fportier-demo.herokuapp.com%2Fverify&scope=openid+email&login_hint=alex%2Bportier%40digriz.org.uk&response_mode=form_post
