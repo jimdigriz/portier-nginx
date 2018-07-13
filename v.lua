@@ -16,8 +16,19 @@ if not id_token then
         ngx.log(ngx.WARN, "missing id_token")
         return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
+local header, payload, signature = id_token:match("^([^.]+)%.([^.]+)%.([^.]+)$")
+if not signature then
+	ngx.log(ngx.WARN, "id_token invalid")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+header = json.decode(base64url_decode(header))
+if header.alg ~= "RS256" then
+	ngx.log(ngx.WARN, "unsupported alg '" .. header.alg .. "'")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+payload = json.decode(base64url_decode(payload))
 
-ngx.log(ngx.ERR, id_token)
+ngx.log(ngx.ERR, json.encode(payload))
 
 local conf_res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
 if conf_res.status >= 400 or conf_res.truncated then
@@ -31,5 +42,18 @@ if jwks_res.status >= 400 or jwks_res.truncated then
 	return ngx.exit(ngx.HTTP_BAD_GATEWAY)
 end
 local jwks = json.decode(jwks_res.body)
-ngx.log(ngx.ERR, jwks_res.body)
+local key
+for i in pairs(jwks.keys) do
+	if jwks.keys[i].use == "sig" and jwks.keys[i].alg == "RS256" and jwks.keys[i].kid == header.kid then
+		key = jwks.keys[i]
+		break
+	end
+end
+if not key then
+	ngx.log(ngx.ERR, "no matching kid for " .. header.kid)
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
 
+ngx.log(ngx.ERR, json.encode(key))
+
+-- https://stackoverflow.com/a/27570866
