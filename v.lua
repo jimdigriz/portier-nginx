@@ -26,9 +26,26 @@ if header.alg ~= "RS256" then
 	ngx.log(ngx.WARN, "unsupported alg '" .. header.alg .. "'")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
-payload = json.decode(base64url_decode(payload))
 
-ngx.log(ngx.ERR, json.encode(payload))
+payload = json.decode(base64url_decode(payload))
+if payload.iss ~= broker then
+	ngx.log(ngx.ERR, "payload iss mismatch, got '" .. payload.iss .. "', expected '" .. broker .. "'")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+local url = ngx.var.scheme .. "://" .. ngx.var.http_host
+if payload.aud ~= url then
+	ngx.log(ngx.WARN, "incorrect aud, got '" .. payload.aud .. "', expected '" .. url .. "'")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+local now = ngx.time()
+if now < payload.iat - 10 or now > payload.exp then
+	ngx.log(ngx.WARN, "expired")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+-- TODO check nonce matches (requires hmac in the verify postback url)
+
+-- the email to use is .sub
+ngx.log(ngx.ERR, json.encode(payload.sub))
 
 local conf_res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
 if conf_res.status >= 400 or conf_res.truncated then
