@@ -57,6 +57,8 @@ server {
 		proxy_set_header User-Agent "";
 		proxy_set_header Cookie "";
 		proxy_set_header Host "$proxy_host";
+
+		# we set a variable as apparently otherwise the DNS lookup is on each request
 		set $proxy_backend "$proxy_scheme://$proxy_host$proxy_url$is_args$args";
 		proxy_pass $proxy_backend;
 
