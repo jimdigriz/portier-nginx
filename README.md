@@ -68,3 +68,10 @@ After a successful authentication, portier-nginx sets the session cookie `portie
     [hmac type]:[hmac truncated to 80bits]:[created time]:[email]
 
 Currently [`md5`](https://tools.ietf.org/html/rfc6151#section-2.3) is used as the HMAC and these cookies expire after 18 hours of inactivity (renewing on each request during their validity).
+
+The following lua files have particular functionality:
+
+ * **`i.lua`:** sets the global variables that will be used by all the workers; including the secret
+ * **`a.lua`:** tests if the user has a valid `portier-nginx-email` cookie, if not it redirects them to login
+ * **`l.lua`:** handles the email login flow
+ * **`v.lua`:** validates the post back from the portier broker
