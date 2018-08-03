@@ -12,14 +12,23 @@ if ngx.var.http_cookie then
 end
 
 if cookie then
-	local hmac_t, hmac_v, email = cookie:match("^(%w+):(%w+):(.*)$")
+	local hmac_t, hmac_v, created_v, email = cookie:match("^(%w+):([0-9a-f]+):(%d+):(.*)$")
 	if email ~= nil then
-		local hmac_i = hmac.new(secret, hmac_t)
-		local hmac_vc = str.to_hex(hmac_i:final(email)):sub(1, 20)
+		local now = ngx.time()
+		local created = tonumber(created_v)
+		-- 18 hours validity
+		if created and created + 64800 > now then
+			local hmac_i = hmac.new(secret, hmac_t)
+			local hmac_vc = str.to_hex(hmac_i:final(created .. ':' .. email)):sub(1, 20)
+			if hmac_vc == hmac_v then
+				hmac_i = hmac.new(secret, hmac_t)
+				hmac_vc = str.to_hex(hmac_i:final(now .. ':' .. email)):sub(1, 20)
+				local value = table.concat({ hmac_t, hmac_vc, now, email }, ":")
 
-		if hmac_vc == hmac_v then
-			ngx.req.set_header("Remote-User", email)
-			return
+				ngx.header["Set-Cookie"] = "portier_nginx_email=" .. value .. "; Path=/; HttpOnly"
+				ngx.req.set_header("Remote-User", email)
+				return
+			end
 		end
 	end
 end
