@@ -26,10 +26,9 @@ digest = require "openssl.digest"
 pkey = require "openssl.pkey"
 hmac = require "openssl.hmac"
 
--- broker = os.getenv("BROKER")
-broker = "https://broker.portier.io"
+broker = os.getenv("BROKER")
 if not broker then
-	assert("missing env BROKER")
+	broker = "https://broker.portier.io"
 end
 
 -- nameservers_str = os.getenv("NAMESERVERS")
