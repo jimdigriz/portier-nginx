@@ -12,10 +12,12 @@ RUN apt-get update \
                 lua-nginx-dns \
 		lua-nginx-string \
 		nginx-full \
+		php-cgi \
 	&& apt-get clean \
 	&& find /var/lib/apt/lists -type f -delete
 
 COPY nginx *.lua /opt/portier/nginx/
+COPY webroot /opt/portier/nginx/webroot/
 
 RUN mkdir -p /var/cache/nginx \
         && chown www-data /var/cache/nginx \

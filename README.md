@@ -31,6 +31,7 @@ The install process is pretty awful, mostly as everyone's application environmen
 
  1. create a directory `/opt/portier/nginx`
  1. copy all the `*.lua` files from this project into it
+ 1. copy [`webroot`](webroot) from this project into it
  1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
@@ -43,6 +44,10 @@ Type in your email address, walk through the authentication flow and you then sh
 It will receive your email address in the HTTP header `Remote-User` which many applications support for external authentication handlers.
 
 ## Configuration
+
+### Login Page
+
+Edit [`webroot/index.html`](webroot/index.html) to suit your cosmetic needs.
 
 ### Broker
 
@@ -76,10 +81,7 @@ Almost the easiest thing here is to slum it with a Docker container (sorry, it i
 Now from within the container run:
 
     /etc/init.d/nginx start
-    sudo apt-get update && sudo apt-get -y install --no-install-recommends php-cgi
-    mkdir webroot
-    printf "<?php\nphpinfo();\n?>" > webroot/index.php
-    php -S 127.0.0.1:8000 -t webroot
+    php -S 127.0.0.1:8000 -t /opt/portier/nginx/webroot
 
 On your workstation, point your browser at http://localhost:1080 and type in your email address to start off the authentication.  If it is successful, you should see the [`phpinfo()`](https://secure.php.net/manual/en/function.phpinfo.php) splash screen and if you scroll down you should find `$_SERVER['HTTP_REMOTE_USER']` is set to your email address.
 

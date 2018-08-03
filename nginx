@@ -20,14 +20,17 @@ server {
 
 	access_by_lua_file /opt/portier/nginx/a.lua;
 
-	location = /.portier/login {
+	location /.portier/login/ {
 		limit_req zone=portier_nginx_login burst=5 nodelay;
 
 		limit_except HEAD GET {
 			deny all;
 		}
 
-		content_by_lua_file /opt/portier/nginx/l.lua;
+		access_by_lua_file /opt/portier/nginx/l.lua;
+
+		alias /opt/portier/nginx/webroot/;
+		index index.html;
 	}
 
 	location = /.portier/verify {
