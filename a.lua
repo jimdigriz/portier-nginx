@@ -1,5 +1,5 @@
 local cookie = ngx.var.cookie_portier_nginx_email
-ngx.req.clear_header("X-Portier-Nginx-Email")
+ngx.req.clear_header("Remote-User")
 
 if ngx.var.http_cookie then
 	local cookies = {}
@@ -18,7 +18,7 @@ if cookie then
 		local hmac_vc = str.to_hex(hmac_i:final(email)):sub(1, 20)
 
 		if hmac_vc == hmac_v then
-			ngx.req.set_header("X-Portier-Nginx-Email", email)
+			ngx.req.set_header("Remote-User", email)
 			return
 		end
 	end
