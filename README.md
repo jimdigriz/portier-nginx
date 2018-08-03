@@ -77,7 +77,7 @@ After a successful authentication, portier-nginx sets the session cookie `portie
 
     [hmac type]:[hmac truncated to 80bits]:[created time]:[email]
 
-Currently [`md5`](https://tools.ietf.org/html/rfc6151#section-2.3) is used as the HMAC and these cookies expire after 18 hours of inactivity (renewing on each request during their validity).
+Currently [`md5`](https://tools.ietf.org/html/rfc6151#section-2.3) is used as the HMAC hash function, the HMAC is [truncated to 80bits](https://tools.ietf.org/html/rfc2104#section-5), and these cookies expire after 18 hours of inactivity (renewing on each request during their validity).
 
 The following lua files have particular functionality:
 
