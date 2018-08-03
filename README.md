@@ -1,6 +1,6 @@
 nginx [Portier](https://portier.github.io/) Authentication.
 
-Handles all the Portier client side work inside `nginx` and the result is an `Remote-User` HTTP header returned to the application being served for use as an external authenticator.
+Handles all the Portier Relying Party (aka client side) work inside `nginx` and the result is an `Remote-User` HTTP header returned to the application being served for use as an external authenticator.
 
 Project was sponsored by [NetworkRADIUS](https://networkradius.com/).
 
@@ -27,7 +27,7 @@ You will require:
 
 # Deploy
 
-The install process is pretty awful, mostly as everyones application environment is a bit bespoke, but these guidelines below should get you moving:
+The install process is pretty awful, mostly as everyone's application environment is a bit bespoke, but these guidelines below should get you moving:
 
  1. create a directory `/opt/portier/nginx`
  1. copy all the `*.lua` files from this project into it
@@ -40,7 +40,7 @@ Hopefully everything starts up okay, and depending on how you reconciled the sam
 
 Type in your email address, walk through the authentication flow and you then should be able to access your application.
 
-It will receive your email address in the [HTTP header `Remote-User` which many applications support for external authentication handlers.
+It will receive your email address in the HTTP header `Remote-User` which many applications support for external authentication handlers.
 
 ## Runtime Secret
 
