@@ -26,15 +26,14 @@ digest = require "openssl.digest"
 pkey = require "openssl.pkey"
 hmac = require "openssl.hmac"
 
-broker = os.getenv("BROKER")
+broker = os.getenv("PORTIER_BROKER")
 if not broker then
 	broker = "https://broker.portier.io"
 end
 
--- nameservers_str = os.getenv("NAMESERVERS")
-nameservers_str = "8.8.8.8 8.8.4.4"
-if not nameservers_str then
-	assert("missing env NAMESERVERS")
+nameservers_str = os.getenv("PORTIER_NAMESERVERS")
+if not nameservers then
+	nameservers_str = "8.8.8.8 8.8.4.4"
 end
 nameservers = {}
 for nameserver in nameservers_str:gmatch("%S+") do

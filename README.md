@@ -42,7 +42,19 @@ Type in your email address, walk through the authentication flow and you then sh
 
 It will receive your email address in the HTTP header `Remote-User` which many applications support for external authentication handlers.
 
-## Runtime Secret
+## Configuration
+
+### Broker
+
+By default, the broker used is `https://broker.portier.io` but this is can be overridden by setting the environment variable `PORTIER_BROKER` to another URL.
+
+### Nameservers
+
+By default, the nameservers used to assist in email address validation are [Google's resolvers](https://developers.google.com/speed/public-dns/), but this can be overridden by setting the environment variable `PORTIER_NAMESERVERS` to a whitespace seperated list of nameservers to use.
+
+**N.B.** if you change this, you should also change `resolver` in the `nginx` configuration too
+
+### Runtime Secret
 
 When you start `nginx` you will see a warning in your error log similar to:
 
