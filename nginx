@@ -45,7 +45,7 @@ server {
 
 		add_header Set-Cookie "portier_nginx_email=; Expires=Fri, 01 Jan 2010 00:00:00 GMT";
 
-		return 307 $scheme://$http_host;
+		return 302 $scheme://$http_host;
 	}
 
 	location ~ ^/.portier/proxy/(?<proxy_scheme>[^/]+)/(?<proxy_host>[^/]+)(?<proxy_url>.*)$ {
