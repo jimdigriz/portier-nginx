@@ -31,7 +31,7 @@ The install process is pretty awful, mostly as everyone's application environmen
 
  1. create a directory `/opt/portier/nginx`
  1. copy all the `*.lua` files from this project into it
- 1. inspect the sample `ngnix` configuration in the project
+ 1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
  1. restart nginx
