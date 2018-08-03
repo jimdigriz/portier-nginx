@@ -81,7 +81,7 @@ local top_header = ngx.decode_base64("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ
 local mid_header = "\x02\x03"
 local n = base64url_decode(key.n)
 local e = base64url_decode(key.e)
-local pub = pkey.new(top_header .. n .. mid_header .. e, 'DER')
+local pub = pkey.new(top_header .. n .. mid_header .. e, "DER")
 local data = digest.new("sha256")
 data:update(header_b64url .. "." .. payload_b64url)
 local verified = pub:verify(base64url_decode(signature_b64url), data)
@@ -90,10 +90,10 @@ if not verified then
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-local hmac_t = 'md5'
+local hmac_t = "md5"
 local hmac_i = hmac.new(secret, hmac_t)
 local hmac_vc = str.to_hex(hmac_i:final(email)):sub(1, 20)
-local value = table.concat({ hmac_t, hmac_vc, email }, ':')
+local value = table.concat({ hmac_t, hmac_vc, email }, ":")
 
 ngx.header["Set-Cookie"] = "portier_nginx_email=" .. value .. "; Path=/; HttpOnly"
 ngx.redirect(url, ngx.HTTP_MOVED_TEMPORARILY)
