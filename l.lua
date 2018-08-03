@@ -29,13 +29,13 @@ function handle (email)
 
 	if not email or email:len() == 0 or email:match("%c") then
 		ngx.log(ngx.WARN, "invalid value: '" .. email .. "'")
-		return ngx.redirect(url_login, ngx.HTTP_TEMPORARY_REDIRECT)
+		return ngx.redirect(url_login, ngx.HTTP_MOVED_TEMPORARILY)
 	end
 
 	local valid, domain = validemail.validemail(email)
 	if not valid then
 		ngx.log(ngx.WARN, "invalid value: '" .. email .. "'")
-		return ngx.redirect(url_login, ngx.HTTP_TEMPORARY_REDIRECT)
+		return ngx.redirect(url_login, ngx.HTTP_MOVED_TEMPORARILY)
 	end
 
 	local r, err = resolver:new{
@@ -52,7 +52,7 @@ function handle (email)
 	end
 	if #ans == 0 then
 		ngx.log(ngx.WARN, "no mx: '" .. email .. "'")
-		return ngx.redirect(url_login, ngx.HTTP_TEMPORARY_REDIRECT)
+		return ngx.redirect(url_login, ngx.HTTP_MOVED_TEMPORARILY)
 	end
 
 	local res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
@@ -71,7 +71,7 @@ function handle (email)
 		login_hint = email,
 		response_mode = "form_post"
 	}
-	ngx.redirect(openid_configuration.authorization_endpoint .. "?" .. ngx.encode_args(args), ngx.HTTP_TEMPORARY_REDIRECT)
+	ngx.redirect(openid_configuration.authorization_endpoint .. "?" .. ngx.encode_args(args), ngx.HTTP_MOVED_TEMPORARILY)
 end
 
 local args = ngx.req.get_uri_args()
