@@ -90,5 +90,5 @@ if not verified then
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-ngx.header["Set-Cookie"] = "portier_nginx_email=" .. email .. "; HttpOnly"
+ngx.header["Set-Cookie"] = "portier_nginx_email=" .. email .. "; Path=/; HttpOnly"
 ngx.redirect(url, ngx.HTTP_MOVED_TEMPORARILY)
