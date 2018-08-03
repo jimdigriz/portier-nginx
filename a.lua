@@ -1,5 +1,5 @@
 local cookie = ngx.var.cookie_portier_nginx_email
-ngx.req.clear_header("X-Portier-Email")
+ngx.req.clear_header("X-Portier-Nginx-Email")
 
 if ngx.var.http_cookie then
 	local cookies = {}
