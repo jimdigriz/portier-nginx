@@ -90,5 +90,10 @@ if not verified then
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-ngx.header["Set-Cookie"] = "portier_nginx_email=" .. email .. "; Path=/; HttpOnly"
+local hmac_t = 'md5'
+local hmac_i = hmac.new(secret, hmac_t)
+local hmac_vc = str.to_hex(hmac_i:final(email)):sub(1, 20)
+local value = table.concat({ hmac_t, hmac_vc, email }, ':')
+
+ngx.header["Set-Cookie"] = "portier_nginx_email=" .. value .. "; Path=/; HttpOnly"
 ngx.redirect(url, ngx.HTTP_MOVED_TEMPORARILY)

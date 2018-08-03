@@ -22,9 +22,9 @@ resolver = require "nginx.dns.resolver"
 random = require "nginx.random"
 str = require "nginx.string"
 json = require "json"
-x509 = require "openssl.x509"
 digest = require "openssl.digest"
 pkey = require "openssl.pkey"
+hmac = require "openssl.hmac"
 
 -- broker = os.getenv("BROKER")
 broker = "https://broker.portier.io"
@@ -49,7 +49,7 @@ if file_secret then
 end
 if not secret then
 	ngx.log(ngx.WARN, "using runtime secret")
-	while not secret == nil do
+	while secret == nil do
 		secret = random.bytes(16, true)
 	end
 end
