@@ -1,6 +1,8 @@
 nginx [Portier](https://portier.github.io/) Authentication.
 
-Project supported by [NetworkRADIUS](https://networkradius.com/).
+Handles all the Portier client side work inside `nginx` and the result is an `Remote-User` HTTP header returned to the application being served for use as an external authenticator.
+
+Project was sponsored by [NetworkRADIUS](https://networkradius.com/).
 
 # Pre-flight
 
@@ -33,6 +35,14 @@ The install process is pretty awful, mostly as everyones application environment
      * the portier-nginx parts are top-and-tailed with `####`
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
  1. restart nginx
+
+Hopefully everything starts up okay, and depending on how you reconciled the sample `nginx` configuration with your existing one, when you open your application you should be directed to a login screen.
+
+Type in your email address, walk through the authentication flow and you then should be able to access your application.
+
+It will receive your email address in the [HTTP header `Remote-User` which many applications support for external authentication handlers.
+
+## Runtime Secret
 
 When you start `nginx` you will see a warning in your error log similar to:
 
