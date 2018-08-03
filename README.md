@@ -1,6 +1,6 @@
 nginx [Portier](https://portier.github.io/) Authentication.
 
-Handles all the Portier Relying Party (aka client side) work inside `nginx` and the result is an `Remote-User` HTTP header returned to the application being served for use as an external authenticator.
+Handles all the Portier Relying Party (aka client side) work inside `nginx` and the result is an `Remote-User` HTTP header returned to the application being served for use as an external authenticator.  Once authenticated, the user receives a session cookie that expires after 18 hours of inactivity.
 
 Project was sponsored by [NetworkRADIUS](https://networkradius.com/).
 
