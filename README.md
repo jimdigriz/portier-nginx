@@ -93,7 +93,7 @@ Currently [`md5`](https://tools.ietf.org/html/rfc6151#section-2.3) is used as th
 
 Each lua file servers a particular purpose:
 
- * **`i.lua`:** sets the global variables that will be used by all the workers; including the secret
- * **`a.lua`:** tests if the user has a valid `portier-nginx-email` cookie, if not it redirects them to login
- * **`l.lua`:** handles the email login flow
- * **`v.lua`:** validates the post back from the portier broker
+ * **[`i.lua`](i.lua):** sets the global variables that will be used by all the workers; including the secret
+ * **[`a.lua`](a.lua):** tests if the user has a valid `portier-nginx-email` cookie, if not it redirects them to login
+ * **[`l.lua`](l.lua):** handles the email login flow
+ * **[`v.lua`](v.lua):** validates the post back from the portier broker
