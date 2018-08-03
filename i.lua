@@ -44,8 +44,8 @@ end
 
 local file_secret = io.open("/opt/portier/nginx/secret", "r")
 if file_secret then
-	secret = file_email_html:read("*all")
-	file_email_html:close()
+	secret = file_secret:read("*all")
+	file_secret:close()
 end
 if not secret then
 	ngx.log(ngx.WARN, "using runtime secret")
