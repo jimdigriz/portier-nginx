@@ -43,6 +43,8 @@ Type in your email address, walk through the authentication flow and you then sh
 
 It will receive your email address in the HTTP header `Remote-User` which many applications support for external authentication handlers.
 
+To logout, send the user to `/.portier/logout` which will delete the cookie and redirect the user to `/`.
+
 ## Configuration
 
 ### Login Page

@@ -46,7 +46,7 @@ server {
 			deny all;
 		}
 
-		add_header Set-Cookie "portier_nginx_email=; Expires=Fri, 01 Jan 2010 00:00:00 GMT";
+		add_header Set-Cookie "portier_nginx_email=; Path=/; HttpOnly; Expires=Mon, 11 Jan 2010 00:00:00 GMT";
 
 		return 302 $scheme://$http_host;
 	}

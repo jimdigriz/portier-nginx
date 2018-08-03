@@ -35,7 +35,7 @@ end
 
 if not ngx.var.request_uri:find("/%.portier/") then
 	if cookie then
-		ngx.header["Set-Cookie"] = "portier_nginx_email=; Expires=Fri, 01 Jan 2010 00:00:00 GMT"
+		ngx.header["Set-Cookie"] = "portier_nginx_email=; Path=/; HttpOnly; Expires=Mon, 11 Jan 2010 00:00:00 GMT"
 	end
 	ngx.redirect("/.portier/login/", ngx.HTTP_MOVED_TEMPORARILY)
 end
