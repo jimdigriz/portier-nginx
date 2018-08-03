@@ -36,7 +36,7 @@ The install process is pretty awful, mostly as everyone's application environmen
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
  1. restart nginx
 
-Hopefully everything starts up okay, and depending on how you reconciled the sample `nginx` configuration with your existing one, when you open your application you should be directed to a login screen.
+Hopefully everything starts up okay, and depending on how you reconciled the [sample `nginx` configuration](nginx) with your existing one, when you open your application you should be directed to a login screen.
 
 Type in your email address, walk through the authentication flow and you then should be able to access your application.
 
@@ -52,7 +52,7 @@ By default, the broker used is `https://broker.portier.io` but this is can be ov
 
 By default, the nameservers used to assist in email address validation are [Google's resolvers](https://developers.google.com/speed/public-dns/), but this can be overridden by setting the environment variable `PORTIER_NAMESERVERS` to a whitespace seperated list of nameservers to use.
 
-**N.B.** if you change this, you should also change `resolver` in the `nginx` configuration too
+**N.B.** if you change this, you should also change [`resolver`](http://nginx.org/en/docs/http/ngx_http_core_module.html#resolver) in the `nginx` configuration too
 
 ### Runtime Secret
 
