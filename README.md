@@ -34,4 +34,4 @@ In the container run:
 
     /etc/init.d/nginx start
 
-On your workstation in a browser go to: http://localhost:1080
+On your workstation in a browser go to http://localhost:1080 and type in your email address to start off the authentication.  If it is successful, you should see the nginx splash screen.
