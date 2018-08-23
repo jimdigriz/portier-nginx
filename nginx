@@ -74,7 +74,8 @@ server {
 	####
 
 	location / {
-		set_by_lua_file $portier_nginx_email /opt/portier/nginx/a.lua;
+		set $portier_nginx_email "";
+		access_by_lua_file /opt/portier/nginx/a.lua;
 
 		#include fastcgi_params;
 		#fastcgi_param REMOTE_USER $portier_nginx_email;

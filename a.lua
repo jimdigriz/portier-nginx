@@ -19,7 +19,8 @@ if cookie_portier_nginx_email then
 				local value = table.concat({ hmac_t, hmac_vc, now, email }, ":")
 
 				ngx.header["Set-Cookie"] = "portier_nginx_email=" .. value .. "; Path=/; HttpOnly"
-				return email
+				ngx.var.portier_nginx_email = email
+				return
 			end
 		end
 	end
