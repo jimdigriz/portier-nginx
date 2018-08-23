@@ -68,7 +68,7 @@ When you start `nginx` you will see a warning in your error log similar to:
 
 This is harmless, but will mean every time you reload nginx any currently authenticated users will be logged out.  To prevent this you can set the secret to a static value with:
 
-    dd if=/dev/random of=/opt/portier/nginx/secret bs=1 count=16
+    dd if=/dev/urandom of=/opt/portier/nginx/secret bs=1 count=16
     chmod 640 /opt/portier/nginx/secret
     chown root:www-data /opt/portier/nginx/secret
 

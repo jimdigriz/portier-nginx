@@ -47,7 +47,5 @@ if file_secret then
 end
 if not secret then
 	ngx.log(ngx.WARN, "using runtime secret")
-	while secret == nil do
-		secret = random.bytes(16, true)
-	end
+	secret = random.bytes(16)
 end
