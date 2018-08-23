@@ -35,13 +35,12 @@ The install process is pretty awful, mostly as everyone's application environmen
  1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
+     * in the example `location / { ... }` shows how to use `a.lua` with HTTP (setting `X-Portier-Nginx-Email`) and FCGI (setting `REMOTE_USER`) backends
  1. restart nginx
 
 Hopefully everything starts up okay, and depending on how you reconciled the [sample `nginx` configuration](nginx) with your existing one, when you open your application you should be directed to a login screen.
 
 Type in your email address, walk through the authentication flow and you then should be able to access your application.
-
-It will receive your email address in the HTTP header `Remote-User` which many applications support for external authentication handlers.
 
 To logout, send the user to `/.portier/logout` which will delete the cookie and redirect the user to `/`.
 
@@ -85,7 +84,7 @@ Now from within the container run:
     /etc/init.d/nginx start
     php -S 127.0.0.1:8000 -t /opt/portier/nginx/webroot
 
-On your workstation, point your browser at http://localhost:1080 and type in your email address to start off the authentication.  If it is successful, you should see the [`phpinfo()`](https://secure.php.net/manual/en/function.phpinfo.php) splash screen and if you scroll down you should find `$_SERVER['HTTP_REMOTE_USER']` is set to your email address.
+On your workstation, point your browser at http://localhost:1080 and type in your email address to start off the authentication.  If it is successful, you should see the [`phpinfo()`](https://secure.php.net/manual/en/function.phpinfo.php) splash screen and if you scroll down you should find `$_SERVER['HTTP_X_PORTIER_NGINX_EMAIL']` is set to your email address.
 
 ## Functional Description
 
