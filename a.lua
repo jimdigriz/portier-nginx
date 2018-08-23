@@ -32,4 +32,4 @@ if not ngx.var.request_uri:find("/%.portier/") then
 	ngx.redirect("/.portier/login/", ngx.HTTP_MOVED_TEMPORARILY)
 end
 
-return;
+return
