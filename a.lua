@@ -3,7 +3,7 @@ ngx.req.clear_header("Remote-User")
 
 if ngx.var.http_cookie then
 	local cookies = {}
-	for cname in (ngx.var.http_cookie .. ";"):gmatch("([^=]+)[^;]*; *$") do
+	for cname in (ngx.var.http_cookie .. ";"):gmatch("([^=]+)[^;]*; *") do
 		if cname ~= "portier_nginx_email" then
 			cookies.insert(cname .. "=" .. ngx.var["cookie_" .. cname])
 		end
