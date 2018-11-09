@@ -22,7 +22,7 @@ local r, err = resolver:new{
 }
 if not r then
 	ngx.log(ngx.ERR, "no resolver (" .. err .. "): '" .. args.email .. "'")
-return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+	return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 local ans, err = r:query(domain, { qtype = r.TYPE_MX })
 if not ans then
@@ -45,7 +45,7 @@ local args = {
 	client_id = url,
 	nonce = str.to_hex(random.bytes(16)),
 	response_type = "id_token",
-redirect_uri = url .. "/.portier/verify",
+	redirect_uri = url .. "/.portier/verify",
 	scope = "openid email",
 	login_hint = args.email,
 	response_mode = "form_post"
