@@ -18,7 +18,7 @@ server {
 	####
 	limit_req_status 429;
 
-	location /.portier/login/ {
+	location /.portier/login {
 		limit_req zone=portier_nginx_login burst=5 nodelay;
 
 		limit_except HEAD GET {
@@ -27,7 +27,7 @@ server {
 
 		access_by_lua_file /opt/portier/nginx/l.lua;
 
-		alias /opt/portier/nginx/webroot/;
+		alias /opt/portier/nginx/webroot;
 		index index.html;
 	}
 

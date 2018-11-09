@@ -34,6 +34,14 @@ if #ans == 0 then
 	return ngx.redirect(url_login, ngx.HTTP_MOVED_TEMPORARILY)
 end
 
+if authorize then
+	local authorized = authorize.query(args.email)
+	if not authorized then
+		ngx.log(ngx.WARN, "not authorized: '" .. args.email .. "'")
+		return ngx.redirect(url_login, ngx.HTTP_MOVED_TEMPORARILY)
+	end
+end
+
 local res = ngx.location.capture(proxy_url(broker .. "/.well-known/openid-configuration"))
 if res.status >= 400 or res.truncated then
 	ngx.log(ngx.ERR, "failed to get /.well-known/openid-configuration")

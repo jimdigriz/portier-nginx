@@ -49,3 +49,8 @@ if not secret then
 	ngx.log(ngx.WARN, "using runtime secret")
 	secret = random.bytes(16)
 end
+
+-- see the README for a description of what to do here
+authorize = nil
+-- authorize = require "examples/authz"
+-- authorize = require "examples/authz-ldap"

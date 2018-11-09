@@ -26,11 +26,11 @@ if cookie_portier_nginx_email then
 	end
 end
 
-if not ngx.var.request_uri:find("/%.portier/") then
+if not ngx.var.request_uri:find("/%.portier") then
 	if cookie_portier_nginx_email then
 		ngx.header["Set-Cookie"] = "portier_nginx_email=; Path=/; HttpOnly; Expires=Mon, 11 Jan 2010 00:00:00 GMT"
 	end
-	ngx.redirect("/.portier/login/", ngx.HTTP_MOVED_TEMPORARILY)
+	ngx.redirect("/.portier/login", ngx.HTTP_MOVED_TEMPORARILY)
 end
 
 return

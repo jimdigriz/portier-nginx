@@ -72,6 +72,12 @@ This is harmless, but will mean every time you reload nginx any currently authen
     chmod 640 /opt/portier/nginx/secret
     chown root:www-data /opt/portier/nginx/secret
 
+### Authorization
+
+You may wish to test externally the email address if it is authorized to connect.
+
+To do this edit `i.lua` and inspect the `authorize` variable and how can hook into the provided [examples (`authz*.lua`)](examples).
+
 # Development
 
 Almost the easiest thing here is to slum it with a Docker container (sorry, it is awful) where you can run:
