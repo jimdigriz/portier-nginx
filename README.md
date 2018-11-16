@@ -31,6 +31,7 @@ The install process is pretty awful, mostly as everyone's application environmen
 
  1. create a directory `/opt/portier/nginx`
  1. copy all the `*.lua` files from this project into it
+ 1. symlink/copy `nginx.mod` to `/etc/nginx/modules-enabled/99-portier-nginx.conf`
  1. copy [`webroot`](webroot) from this project into it
  1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
