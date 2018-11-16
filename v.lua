@@ -2,19 +2,19 @@ ngx.req.read_body()
 
 local args = ngx.req.get_post_args()
 if not args then
-        ngx.log(ngx.WARN, "no post args")
-        return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	ngx.log(ngx.WARN, "no post args")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
 if args.error then
-        ngx.log(ngx.WARN, "error: " .. args.error)
-        return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	ngx.log(ngx.WARN, "error: " .. args.error)
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
 local id_token = args.id_token
 if not id_token then
-        ngx.log(ngx.WARN, "missing id_token")
-        return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	ngx.log(ngx.WARN, "missing id_token")
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 local header_b64url, payload_b64url, signature_b64url = id_token:match("^([^.]+)%.([^.]+)%.([^.]+)$")
 if not signature_b64url then
@@ -77,10 +77,19 @@ if not key then
 end
 
 -- https://stackoverflow.com/a/27570866
-local top_header = ngx.decode_base64("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA")
-local mid_header = "\x02\x03"
 local n = base64url_decode(key.n)
 local e = base64url_decode(key.e)
+local top_header_b64
+if n:len() == 256 then
+	top_header_b64 = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA"
+elseif n:len() == 512 then
+	top_header_b64 = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA"
+else
+	ngx.log(ngx.ERR, "unable to handle key length of " .. n:len() * 8)
+	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+end
+local top_header = ngx.decode_base64(top_header_b64)
+local mid_header = "\x02\x03"
 local pub = pkey.new(top_header .. n .. mid_header .. e, "DER")
 local data = digest.new("sha256")
 data:update(header_b64url .. "." .. payload_b64url)
