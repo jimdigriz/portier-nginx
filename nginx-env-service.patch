@@ -4,7 +4,7 @@
  
  [Service]
  Type=forking
-+EnvironmentFile=/opt/portier/nginx/env
++EnvironmentFile=/opt/portier/nginx/nginx-env
  PIDFile=/run/nginx.pid
  ExecStartPre=/usr/sbin/nginx -t -q -g 'daemon on; master_process on;'
  ExecStart=/usr/sbin/nginx -g 'daemon on; master_process on;'

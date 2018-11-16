@@ -35,7 +35,7 @@ for nameserver in nameservers_str:gmatch("%S+") do
 end
 
 -- see the README for a description of what to do here
-authorize = os.genenv("PORTIER_AUTHORIZE")
+authorize = os.getenv("PORTIER_AUTHORIZE")
 if authorize then
 	authorize = require (authorize)
 end
