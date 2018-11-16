@@ -32,6 +32,7 @@ The install process is pretty awful, mostly as everyone's application environmen
  1. create a directory `/opt/portier/nginx`
  1. copy all the `*.lua` files from this project into it
  1. symlink/copy `nginx.mod` to `/etc/nginx/modules-enabled/99-portier-nginx.conf`
+ 1. patch `/lib/systemd/system/nginx.service` with nginx-env-service.patch
  1. copy [`webroot`](webroot) from this project into it
  1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
@@ -46,6 +47,10 @@ Type in your email address, walk through the authentication flow and you then sh
 To logout, send the user to `/.portier/logout` which will delete the cookie and redirect the user to `/`.
 
 ## Configuration
+
+Where environment variables are described, to update them edit `/opt/portier/nginx/nginx-env` and run:
+
+    systemctl restart nginx
 
 ### Login Page
 
