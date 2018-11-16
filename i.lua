@@ -37,7 +37,7 @@ end
 -- see the README for a description of what to do here
 authorize = os.genenv("PORTIER_AUTHORIZE")
 if authorize then
-	authorize = require authorize
+	authorize = require (authorize)
 end
 
 local file_secret = io.open("/opt/portier/nginx/secret", "r")
