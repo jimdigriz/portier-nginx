@@ -82,7 +82,7 @@ This is harmless, but will mean every time you reload nginx any currently authen
 
 You may wish to test externally the email address if it is authorized to connect.
 
-To do this edit `i.lua` and inspect the `authorize` variable and how to use it with the provided [examples (`authz*.lua`)](examples).
+To do set the environment variable `PORTIER_AUTHORIZE`; on how to use this you can inspect the provided [examples (`authz*.lua`)](examples).
 
 # Development
 
