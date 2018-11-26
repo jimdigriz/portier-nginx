@@ -30,14 +30,15 @@ You will require:
 The install process is pretty awful, mostly as everyone's application environment is a bit bespoke, but these guidelines below should get you moving:
 
  1. create a directory `/opt/portier/nginx`
- 1. copy all the `*.lua` files from this project into it
- 1. symlink/copy `nginx.mod` to `/etc/nginx/modules-enabled/99-portier-nginx.conf`
- 1. patch `/lib/systemd/system/nginx.service` with nginx-env-service.patch
+ 1. copy all the `*.lua` files and [`nginx-env`](nginx-env) from this project into it
+ 1. symlink/copy [`nginx.mod`](nginx.mod) to `/etc/nginx/modules-enabled/99-portier-nginx.conf`
+ 1. patch `/lib/systemd/system/nginx.service` with [`nginx-env-service.patch`](nginx-env-service.patch)
  1. copy [`webroot`](webroot) from this project into it
  1. inspect the sample [`ngnix`](nginx) configuration in the project
      * the portier-nginx parts are top-and-tailed with `####`
      * extract the `http { ... }` and `server { ... }` sections and graft them into your own nginx configuration
      * in the example `location / { ... }` shows how to use `a.lua` with HTTP (setting `X-Portier-Nginx-Email`) and FCGI (setting `REMOTE_USER`) backends
+ 1. follow the configuration instructions below, typically requires editing [`/opt/portier/nginx/nginx-env`](nginx-env)
  1. restart nginx
 
 Hopefully everything starts up okay, and depending on how you reconciled the [sample `nginx` configuration](nginx) with your existing one, when you open your application you should be directed to a login screen.
