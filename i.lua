@@ -1,3 +1,12 @@
+validemail = require "valid-email"
+resolver = require "nginx.dns.resolver"
+random = require "nginx.random"
+str = require "nginx.string"
+json = require "json"
+digest = require "openssl.digest"
+pkey = require "openssl.pkey"
+hmac = require "openssl.hmac"
+
 function base64url_encode (s)
 	local s64 = ngx.encode_base64(s)
 	return s64:gsub("+", "-"):gsub("/", "_"):gsub("=", "")
@@ -16,15 +25,6 @@ function proxy_url (url)
 	local scheme, rest = url:match("^(%w+)://(.*)$")
 	return "/.portier/proxy/" .. scheme .. "/" .. rest
 end
-
-validemail = require "valid-email"
-resolver = require "nginx.dns.resolver"
-random = require "nginx.random"
-str = require "nginx.string"
-json = require "json"
-digest = require "openssl.digest"
-pkey = require "openssl.pkey"
-hmac = require "openssl.hmac"
 
 broker = assert(os.getenv("PORTIER_BROKER"))
 
