@@ -57,6 +57,13 @@ Where environment variables are described, to update them edit `/opt/portier/ngi
 
 Edit [`webroot/index.html`](webroot/index.html) to suit your cosmetic needs.
 
+On errors, the user will be redirected to the login page, but in the [fragment](https://en.wikipedia.org/wiki/Fragment_identifier) will be a the following query string encoded key value pairs:
+
+ * **`email`:** address supplied
+ * **`error`:** human readable message
+
+You may wish to use these values to indicate why the email address supplied failed.
+
 ### Broker
 
 By default, the broker used is `https://broker.portier.io` but this is can be overridden by setting the environment variable `PORTIER_BROKER` to another URL.
