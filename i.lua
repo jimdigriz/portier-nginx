@@ -26,9 +26,15 @@ function proxy_url (url)
 	return "/.portier/proxy/" .. scheme .. "/" .. rest
 end
 
-broker = assert(os.getenv("PORTIER_BROKER"))
+broker = os.getenv("PORTIER_BROKER")
+if not broker then
+	broker = "https://broker.portier.io"
+end
 
-nameservers_str = assert(os.getenv("PORTIER_NAMESERVERS"))
+nameservers_str = os.getenv("PORTIER_NAMESERVERS")
+if not nameservers_str then
+	nameservers_str = "1.1.1.1 1.0.0.1"
+end
 nameservers = {}
 for nameserver in nameservers_str:gmatch("%S+") do
 	table.insert(nameservers, nameserver)
