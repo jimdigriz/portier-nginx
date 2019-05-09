@@ -2,7 +2,7 @@
 
 local m = {}
 
-local ldapldap = require "lualdap"
+require "lualdap"
 
 local function normalize(str)
         local lastAt = str:find("[^%@]+$")
