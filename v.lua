@@ -3,7 +3,7 @@ ngx.req.read_body()
 local args = ngx.req.get_post_args()
 if not args then
 	ngx.log(ngx.WARN, "no post args")
-	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	return ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 
 if args.error then
@@ -14,20 +14,20 @@ end
 local id_token = args.id_token
 if not id_token then
 	ngx.log(ngx.WARN, "missing id_token")
-	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	return ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 local header_b64url, payload_b64url, signature_b64url = id_token:match("^([^.]+)%.([^.]+)%.([^.]+)$")
 if not signature_b64url then
 	ngx.log(ngx.WARN, "id_token invalid")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
-header = json.decode(base64url_decode(header_b64url))
+local header = json.decode(base64url_decode(header_b64url))
 if header.alg ~= "RS256" then
 	ngx.log(ngx.WARN, "unsupported alg '" .. header.alg .. "'")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-payload = json.decode(base64url_decode(payload_b64url))
+local payload = json.decode(base64url_decode(payload_b64url))
 if payload.iss ~= broker then
 	ngx.log(ngx.ERR, "payload iss mismatch, got '" .. payload.iss .. "', expected '" .. broker .. "'")
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
@@ -40,7 +40,7 @@ end
 local now = ngx.time()
 if now < payload.iat - 10 or now > payload.exp then
 	ngx.log(ngx.WARN, "expired")
-	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	return ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 -- TODO check nonce matches (requires hmac in the verify postback url)
 
@@ -66,14 +66,14 @@ end
 local jwks = json.decode(jwks_res.body)
 local key
 for i in pairs(jwks.keys) do
-	if jwks.keys[i].use == "sig" and jwks.keys[i].alg == "RS256" and jwks.keys[i].kid == header.kid then
+	if jwks.keys[i].use == "sig" and jwks.keys[i].alg == header.alg and jwks.keys[i].kid == header.kid then
 		key = jwks.keys[i]
 		break
 	end
 end
 if not key then
 	ngx.log(ngx.ERR, "no matching kid for " .. header.kid)
-	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	return ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 
 -- https://stackoverflow.com/a/27570866
@@ -85,7 +85,7 @@ if n:len() == 256 then
 elseif n:len() == 512 then
 	top_header_b64 = "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA"
 else
-	ngx.log(ngx.ERR, "unable to handle key length of " .. n:len() * 8)
+	ngx.log(ngx.ERR, "unable to handle key length of " .. tostring(n:len() * 8))
 	return ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 local top_header = ngx.decode_base64(top_header_b64)
@@ -96,7 +96,7 @@ data:update(header_b64url .. "." .. payload_b64url)
 local verified = pub:verify(base64url_decode(signature_b64url), data)
 if not verified then
 	ngx.log(ngx.WARN, "bad signature")
-	return ngx.exit(ngx.HTTP_BAD_REQUEST)
+	return ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 
 local now = ngx.time()
