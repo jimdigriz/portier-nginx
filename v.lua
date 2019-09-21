@@ -22,7 +22,7 @@ if not signature_b64url then
 	ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 local valid, header, payload
-valid, header = pcall(function() return json.decode(base64url_decode(header_b64url)) end)
+valid, header = pcall(function () return json.decode(base64url_decode(header_b64url)) end)
 if not valid then
         ngx.log(ngx.WARN, "header not valid JSON")
         ngx.exit(ngx.HTTP_BAD_REQUEST)
@@ -32,7 +32,7 @@ if header.alg ~= "RS256" then
 	ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 
-valid, payload = pcall(function() return json.decode(base64url_decode(payload_b64url)) end)
+valid, payload = pcall(function () return json.decode(base64url_decode(payload_b64url)) end)
 if not valid then
         ngx.log(ngx.WARN, "payload not valid JSON")
         ngx.exit(ngx.HTTP_BAD_REQUEST)
