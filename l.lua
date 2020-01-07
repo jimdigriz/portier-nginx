@@ -43,10 +43,14 @@ if #ans == 0 then
 end
 
 if authorize then
-	local success, authorized = pcall(authorize.query, args.email)
+	local success, authorized, errorstr = pcall(authorize.query, args.email)
 	if not success or not authorized then
 		ngx.log(ngx.WARN, "not authorized: '" .. args.email .. "'")
-		error("not authorized, please contact support")
+		if errorstr == "" then
+			error("not authorized, please contact support")
+		else
+			error(errorstr)
+		end
 	end
 end
 

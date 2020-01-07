@@ -13,7 +13,8 @@ end
 
 function m.query(email0)
         local ld = assert(lualdap.open_simple("ldap.example.com"))
-
+		local bool = false
+		local errorstr = "" 
         local email = normalize(email0)
 
         local params = {
@@ -24,14 +25,13 @@ function m.query(email0)
                 sizelimit       = 1
         }
 
-        local count = 0
         for dn in ld:search(params) do
-                count = count + 1
+                bool = true
         end
 
         ld:close()
 
-        return count > 0
+        return bool,errorstr
 end
 
 return m
