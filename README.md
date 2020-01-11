@@ -92,6 +92,10 @@ You may wish to test externally the email address if it is authorized to connect
 
 To do set the environment variable `PORTIER_AUTHORIZE`; on how to use this you can inspect the provided [examples (`authz*.lua`)](examples).
 
+If your function returns `true`, authorization is considered successful.  If you return `false` then the user is rejected, though instead you can return a string instead and the value will be returned to the user to communicate the reason for the authorization failed (eg. expired account, time of day, ...).
+
+If your function explodes, then authorization is considered failed and the user is shown the same message as if you returned `false`.
+
 # Development
 
 Almost the easiest thing here is to slum it with a Docker container (sorry, it is awful) where you can run:

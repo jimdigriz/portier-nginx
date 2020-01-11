@@ -24,8 +24,8 @@ end
 local valid, header, payload
 valid, header = pcall(function () return json.decode(base64url_decode(header_b64url)) end)
 if not valid then
-        ngx.log(ngx.WARN, "header not valid JSON")
-        ngx.exit(ngx.HTTP_BAD_REQUEST)
+	ngx.log(ngx.WARN, "header not valid JSON")
+	ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 if header.alg ~= "RS256" then
 	ngx.log(ngx.WARN, "unsupported alg '" .. header.alg .. "'")
@@ -34,8 +34,8 @@ end
 
 valid, payload = pcall(function () return json.decode(base64url_decode(payload_b64url)) end)
 if not valid then
-        ngx.log(ngx.WARN, "payload not valid JSON")
-        ngx.exit(ngx.HTTP_BAD_REQUEST)
+	ngx.log(ngx.WARN, "payload not valid JSON")
+	ngx.exit(ngx.HTTP_BAD_REQUEST)
 end
 if payload.iss ~= broker then
 	ngx.log(ngx.ERR, "payload iss mismatch, got '" .. payload.iss .. "', expected '" .. broker .. "'")
