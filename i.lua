@@ -15,7 +15,7 @@ end
 function base64url_decode (s64url)
 	local s64 = s64url:gsub("-", "+"):gsub("_", "/")
 	local pad = s64:len() % 4
-        if pad > 0 then
+	if pad > 0 then
 		s64 = s64 .. string.rep("=", 4 - pad)
 	end
 	return ngx.decode_base64(s64)

@@ -11,13 +11,11 @@ local function normalize(str)
 end
 
 function m.query(email0)
-	errorstr = ""
-	bool = false
 	local email = normalize(email0)
 	if whitelist[email] then
-		bool = true
+		return true
 	end
-	return bool,errorstr
+	return false
 end
 
 return m
