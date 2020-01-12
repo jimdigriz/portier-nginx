@@ -75,7 +75,7 @@ end
 local jwks = json.decode(jwks_res.body)
 local key
 for i in pairs(jwks.keys) do
-	if jwks.keys[i].use == "sig" and jwks.keys[i].alg == header.alg and jwks.keys[i].kid == header.kid then
+	if jwks.keys[i].use == "sig" and jwks.keys[i].kty == "RSA" and jwks.keys[i].kid == header.kid then
 		key = jwks.keys[i]
 		break
 	end
