@@ -37,8 +37,9 @@ if not ans then
 	ngx.log(ngx.WARN, "no ans: '" .. args.email .. "'")
 	error("server DNS timeout problem, please contact support")
 end
-if #ans == 0 then
-	ngx.log(ngx.WARN, "no mx: '" .. args.email .. "'")
+-- https://tools.ietf.org/html/rfc7505
+if #ans == 0 or (#ans == 1 and ans[1].preference == 0 and ans[1].exchange == "") then
+	ngx.log(ngx.WARN, "no no/null: '" .. args.email .. "'")
 	error("domain does not accept mail")
 end
 
