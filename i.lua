@@ -9,7 +9,7 @@ hmac = require "openssl.hmac"
 
 function base64url_encode (s)
 	local s64 = ngx.encode_base64(s)
-	return s64:gsub("+", "-"):gsub("/", "_"):gsub("=", "")
+	return s64:gsub("=", ""):gsub("+", "-"):gsub("/", "_")
 end
 
 function base64url_decode (s64url)
